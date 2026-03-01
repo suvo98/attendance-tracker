@@ -11,12 +11,18 @@ CREATE TABLE IF NOT EXISTS users (
 CREATE TABLE IF NOT EXISTS attendance_logs (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     user_id INT UNSIGNED NOT NULL,
+    user_name VARCHAR(100) NOT NULL DEFAULT '',
+    remarks TEXT NULL,
     marked_at DATETIME NOT NULL,
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_attendance_user
         FOREIGN KEY (user_id) REFERENCES users(id)
         ON DELETE CASCADE
 ) ENGINE=InnoDB;
+
+ALTER TABLE attendance_logs
+    ADD COLUMN IF NOT EXISTS user_name VARCHAR(100) NOT NULL DEFAULT '' AFTER user_id,
+    ADD COLUMN IF NOT EXISTS remarks TEXT NULL AFTER user_name;
 
 INSERT INTO users (name, user_hash)
 VALUES

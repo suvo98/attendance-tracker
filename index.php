@@ -5,23 +5,43 @@ require_once __DIR__ . '/config.php';
 
 $message = '';
 if (isset($_GET['status'])) {
-    if ($_GET['status'] === 'ok') {
+    if ($_GET['status'] === 'login_ok') {
+        $message = 'Login successful.';
+    } elseif ($_GET['status'] === 'logged_out') {
+        $message = 'Logged out successfully.';
+    } elseif ($_GET['status'] === 'ok') {
         $message = 'Attendance saved successfully.';
+    } elseif ($_GET['status'] === 'deleted') {
+        $message = 'Your attendance log was deleted.';
     } elseif ($_GET['status'] === 'invalid_hash') {
         $message = 'Invalid user hash.';
+    } elseif ($_GET['status'] === 'auth_required') {
+        $message = 'Please login with hash first.';
+    } elseif ($_GET['status'] === 'invalid_delete') {
+        $message = 'Invalid log selected for delete.';
+    } elseif ($_GET['status'] === 'delete_denied') {
+        $message = 'You can delete only your own logs.';
     } elseif ($_GET['status'] === 'error') {
         $message = 'Something went wrong while saving attendance.';
     }
 }
 
-$recentLogsStmt = $pdo->query(
-    'SELECT a.id, u.name, u.user_hash, a.marked_at
-     FROM attendance_logs a
-     INNER JOIN users u ON u.id = a.user_id
-     ORDER BY a.id DESC
-     LIMIT 20'
-);
-$recentLogs = $recentLogsStmt->fetchAll();
+$isLoggedIn = isset($_SESSION['user_id'], $_SESSION['user_name']);
+$currentUserId = $isLoggedIn ? (int)$_SESSION['user_id'] : 0;
+$currentUserName = $isLoggedIn ? (string)$_SESSION['user_name'] : '';
+
+$myLogs = [];
+if ($isLoggedIn) {
+    $myLogsStmt = $pdo->prepare(
+        'SELECT id, user_name, remarks, marked_at
+         FROM attendance_logs
+         WHERE user_id = :user_id
+         ORDER BY id DESC
+         LIMIT 50'
+    );
+    $myLogsStmt->execute([':user_id' => $currentUserId]);
+    $myLogs = $myLogsStmt->fetchAll();
+}
 ?>
 <!doctype html>
 <html lang="en">
@@ -40,58 +60,100 @@ $recentLogs = $recentLogsStmt->fetchAll();
         th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
         th { background: #f0f0f0; }
         button { padding: 8px 12px; cursor: pointer; }
+        input, textarea { width: 100%; padding: 8px; margin: 8px 0; box-sizing: border-box; }
         .hash { font-family: Consolas, monospace; font-size: 12px; word-break: break-all; }
         .link-btn { display: inline-block; padding: 8px 12px; background: #f0f0f0; border: 1px solid #ddd; border-radius: 4px; text-decoration: none; color: #000; }
+        .topbar { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+        .inline { display: inline; }
+        .muted { color: #555; font-size: 14px; margin-top: 0; }
     </style>
 </head>
 <body>
-    <h1>Attendance Tracker</h1>
+    <div class="topbar">
+        <h1>Attendance Tracker</h1>
+        <?php if ($isLoggedIn): ?>
+            <form method="post" action="mark.php" class="inline">
+                <input type="hidden" name="action" value="logout">
+                <button type="submit">Logout</button>
+            </form>
+        <?php endif; ?>
+    </div>
 
     <?php if ($message !== ''): ?>
         <div class="msg"><?= htmlspecialchars($message, ENT_QUOTES, 'UTF-8') ?></div>
     <?php endif; ?>
 
-    <div class="card">
-        <h2>Mark Attendance</h2>
-        <form method="post" action="mark.php">
-            <label for="user_hash">User Hash:</label><br>
-            <input type="text" id="user_hash" name="user_hash" required style="width:100%;padding:8px;margin:8px 0;">
-            <button type="submit">Submit Attendance</button>
-        </form>
-    </div>
+    <?php if (!$isLoggedIn): ?>
+        <div class="card">
+            <h2>Login With Hash</h2>
+            <p class="muted">Login once with hash. Session will keep you signed in.</p>
+            <form method="post" action="mark.php">
+                <input type="hidden" name="action" value="login">
+                <label for="user_hash">User Hash:</label>
+                <input type="text" id="user_hash" name="user_hash" required autocomplete="off">
+                <button type="submit">Login</button>
+            </form>
+        </div>
+    <?php else: ?>
+        <div class="card">
+            <h2>Mark Attendance</h2>
+            <p class="muted">Logged in as: <strong><?= htmlspecialchars($currentUserName, ENT_QUOTES, 'UTF-8') ?></strong></p>
+            <form method="post" action="mark.php">
+                <input type="hidden" name="action" value="mark">
+                <label for="remarks">Remarks (optional):</label>
+                <textarea id="remarks" name="remarks" rows="3" placeholder="Write optional remarks"></textarea>
+                <button type="submit">Save Attendance</button>
+            </form>
+        </div>
+    <?php endif; ?>
 
     <div class="card">
         <h2>Registered Users</h2>
         <a class="link-btn" href="users.php">Go To Users Route</a>
     </div>
 
-    <div class="card">
-        <h2>Recent Attendance Logs</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Log ID</th>
-                    <th>User</th>
-                    <th>User Hash</th>
-                    <th>Marked At</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php if (count($recentLogs) === 0): ?>
-                    <tr><td colspan="4">No attendance yet.</td></tr>
-                <?php else: ?>
-                    <?php foreach ($recentLogs as $row): ?>
-                        <tr>
-                            <td><?= (int)$row['id'] ?></td>
-                            <td><?= htmlspecialchars($row['name'], ENT_QUOTES, 'UTF-8') ?></td>
-                            <td class="hash"><?= htmlspecialchars($row['user_hash'], ENT_QUOTES, 'UTF-8') ?></td>
-                            <td><?= htmlspecialchars($row['marked_at'], ENT_QUOTES, 'UTF-8') ?></td>
-                        </tr>
-                    <?php endforeach; ?>
-                <?php endif; ?>
-            </tbody>
-        </table>
-    </div>
+    <?php if ($isLoggedIn): ?>
+        <div class="card">
+            <h2>My Attendance Logs</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Log ID</th>
+                        <th>User</th>
+                        <th>Remarks</th>
+                        <th>DateTime</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php if (count($myLogs) === 0): ?>
+                        <tr><td colspan="5">No attendance yet.</td></tr>
+                    <?php else: ?>
+                        <?php foreach ($myLogs as $row): ?>
+                            <tr>
+                                <td><?= (int)$row['id'] ?></td>
+                                <td><?= htmlspecialchars($row['user_name'], ENT_QUOTES, 'UTF-8') ?></td>
+                                <td><?= htmlspecialchars((string)($row['remarks'] ?? ''), ENT_QUOTES, 'UTF-8') ?></td>
+                                <td><?= htmlspecialchars($row['marked_at'], ENT_QUOTES, 'UTF-8') ?></td>
+                                <td>
+                                    <form method="post" action="mark.php" class="inline" onsubmit="return confirm('Delete this log?');">
+                                        <input type="hidden" name="action" value="delete">
+                                        <input type="hidden" name="log_id" value="<?= (int)$row['id'] ?>">
+                                        <button type="submit">Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+        </div>
+    <?php else: ?>
+        <div class="card">
+            <h2>My Attendance Logs</h2>
+            <p class="muted">Login with hash first to submit and view logs.</p>
+        </div>
+    <?php endif; ?>
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', function () {

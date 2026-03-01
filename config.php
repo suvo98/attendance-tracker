@@ -1,6 +1,23 @@
 <?php
 declare(strict_types=1);
 
+date_default_timezone_set('Asia/Dhaka');
+
+// 6 months = 60 * 60 * 24 * 30 * 6 seconds
+$sessionLifetime = 15552000;
+ini_set('session.gc_maxlifetime', (string)$sessionLifetime);
+session_set_cookie_params([
+    'lifetime' => $sessionLifetime,
+    'path' => '/',
+    'secure' => isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off',
+    'httponly' => true,
+    'samesite' => 'Lax',
+]);
+
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
 $host = '127.0.0.1';
 $dbName = 'attendance_tracker';
 $dbUser = 'root';
@@ -16,6 +33,7 @@ $options = [
 
 try {
     $pdo = new PDO($dsn, $dbUser, $dbPass, $options);
+    $pdo->exec("SET time_zone = '+06:00'");
 } catch (PDOException $e) {
     http_response_code(500);
     exit('Database connection failed: ' . $e->getMessage());
