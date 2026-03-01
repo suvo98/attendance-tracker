@@ -65,7 +65,7 @@ if ($isLoggedIn) {
     <link rel="stylesheet" href="/assets/styles.css">
     <title>Attendance Tracker</title>
 </head>
-<body>
+<body class="has-dock">
     <main class="shell">
         <header class="hero">
             <div>
@@ -183,6 +183,44 @@ if ($isLoggedIn) {
             </article>
         <?php endif; ?>
     </main>
+    <nav class="dock no-print" data-dock aria-label="Quick navigation">
+        <a class="dock-item" href="/pages/users.php" aria-label="Users">
+            <span class="dock-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none">
+                    <path d="M16 20v-1.1c0-1.6-1.4-2.9-3-2.9H7c-1.6 0-3 1.3-3 2.9V20" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                    <circle cx="10" cy="8" r="3" stroke="currentColor" stroke-width="1.8"/>
+                    <path d="M20 20v-1.1c0-1.1-.7-2-1.7-2.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                    <path d="M15.5 5.4a3 3 0 0 1 0 5.2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                </svg>
+            </span>
+            <span class="dock-label">Users</span>
+        </a>
+        <a class="dock-item" href="/pages/heatmaps.php" aria-label="Heatmaps">
+            <span class="dock-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none">
+                    <rect x="3" y="3" width="6" height="6" rx="1.4" stroke="currentColor" stroke-width="1.8"/>
+                    <rect x="10.5" y="3" width="4.5" height="6" rx="1.2" stroke="currentColor" stroke-width="1.8"/>
+                    <rect x="16.5" y="3" width="4.5" height="6" rx="1.2" stroke="currentColor" stroke-width="1.8"/>
+                    <rect x="3" y="10.5" width="4.5" height="4.5" rx="1.2" stroke="currentColor" stroke-width="1.8"/>
+                    <rect x="8.8" y="10.5" width="6.2" height="4.5" rx="1.2" stroke="currentColor" stroke-width="1.8"/>
+                    <rect x="16.5" y="10.5" width="4.5" height="4.5" rx="1.2" stroke="currentColor" stroke-width="1.8"/>
+                    <rect x="3" y="16.2" width="4.5" height="4.8" rx="1.2" stroke="currentColor" stroke-width="1.8"/>
+                    <rect x="8.8" y="16.2" width="12.2" height="4.8" rx="1.2" stroke="currentColor" stroke-width="1.8"/>
+                </svg>
+            </span>
+            <span class="dock-label">Heatmaps</span>
+        </a>
+        <a class="dock-item" href="/pages/report.php" aria-label="Report">
+            <span class="dock-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none">
+                    <path d="M7 3h7l4 4v14H7z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+                    <path d="M14 3v4h4" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+                    <path d="M10 12h5M10 16h5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                </svg>
+            </span>
+            <span class="dock-label">Report</span>
+        </a>
+    </nav>
 
     <script>
         if ('serviceWorker' in navigator) {
@@ -190,6 +228,43 @@ if ($isLoggedIn) {
                 navigator.serviceWorker.register('/service-worker.js');
             });
         }
+
+        (function () {
+            const dock = document.querySelector('[data-dock]');
+            if (!dock) {
+                return;
+            }
+
+            const items = Array.from(dock.querySelectorAll('.dock-item'));
+            const radius = 140;
+            const maxScale = 1.55;
+
+            const reset = () => {
+                items.forEach((item) => item.style.setProperty('--scale', '1'));
+            };
+
+            dock.addEventListener('mousemove', (event) => {
+                const mouseX = event.clientX;
+
+                items.forEach((item) => {
+                    const rect = item.getBoundingClientRect();
+                    const centerX = rect.left + rect.width / 2;
+                    const distance = Math.abs(mouseX - centerX);
+
+                    let scale = 1;
+                    if (distance < radius) {
+                        const power = 1 - distance / radius;
+                        scale = 1 + (maxScale - 1) * power;
+                    }
+
+                    item.style.setProperty('--scale', scale.toFixed(3));
+                });
+            });
+
+            dock.addEventListener('mouseleave', reset);
+            dock.addEventListener('touchstart', reset, { passive: true });
+            reset();
+        })();
     </script>
 </body>
 </html>
