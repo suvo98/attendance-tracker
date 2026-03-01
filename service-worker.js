@@ -1,10 +1,11 @@
-﻿const CACHE_NAME = 'attendance-tracker-v3';
+﻿const CACHE_NAME = 'attendance-tracker-v4';
 const APP_SHELL = [
   '/',
   '/index.php',
   '/users.php',
   '/report.php',
   '/manifest.json',
+  '/styles.css',
   '/offline.html',
   '/icons/android-chrome-192x192.png',
   '/icons/android-chrome-512x512.png'
@@ -80,5 +81,6 @@ self.addEventListener('fetch', (event) => {
     })
   );
 });
+
 
 

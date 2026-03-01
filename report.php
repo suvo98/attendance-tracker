@@ -45,91 +45,82 @@ if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $startDate) || !preg_match('/^\d{4}-\d{
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#0f172a">
+    <meta name="theme-color" content="#0ea5a4">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <link rel="manifest" href="/manifest.json">
+    <link rel="stylesheet" href="/styles.css">
     <title>Date Range Report</title>
-    <style>
-        body { font-family: Arial, sans-serif; max-width: 1000px; margin: 30px auto; padding: 0 15px; }
-        .card { border: 1px solid #ddd; border-radius: 8px; padding: 16px; margin-bottom: 16px; }
-        .msg { margin-bottom: 16px; padding: 10px; border-radius: 6px; background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
-        .actions { display: flex; gap: 8px; flex-wrap: wrap; }
-        .actions button, .actions a { padding: 8px 12px; cursor: pointer; border: 1px solid #ddd; border-radius: 4px; background: #f8fafc; text-decoration: none; color: #000; }
-        .filters { display: grid; grid-template-columns: 1fr 1fr auto; gap: 10px; align-items: end; }
-        .filters label { display: block; font-size: 14px; margin-bottom: 4px; }
-        .filters input { width: 100%; padding: 8px; box-sizing: border-box; }
-        table { border-collapse: collapse; width: 100%; }
-        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; vertical-align: top; }
-        th { background: #f0f0f0; }
-        .meta { color: #333; margin: 10px 0; }
-        .no-print { display: block; }
-        @media print {
-            .no-print { display: none !important; }
-            body { margin: 0; max-width: 100%; padding: 0; }
-            .card { border: none; padding: 0; margin: 0 0 12px; }
-            a { text-decoration: none; color: #000; }
-        }
-    </style>
 </head>
 <body>
-    <div class="card no-print">
-        <h1>Date Range Report</h1>
-        <p>User: <strong><?= htmlspecialchars($currentUserName, ENT_QUOTES, 'UTF-8') ?></strong></p>
-        <form method="get" action="report.php" class="filters">
+    <main class="shell">
+        <header class="hero no-print">
             <div>
-                <label for="start_date">Start Date</label>
-                <input type="date" id="start_date" name="start_date" value="<?= htmlspecialchars($startDate, ENT_QUOTES, 'UTF-8') ?>" required>
-            </div>
-            <div>
-                <label for="end_date">End Date</label>
-                <input type="date" id="end_date" name="end_date" value="<?= htmlspecialchars($endDate, ENT_QUOTES, 'UTF-8') ?>" required>
+                <h1 class="title">Date Range Report</h1>
+                <p class="subtitle">Filter attendance logs and export PDF instantly.</p>
             </div>
             <div class="actions">
-                <button type="submit">Search</button>
+                <a class="btn-link ghost" href="index.php">Back To Home</a>
+                <button class="btn primary" type="button" onclick="window.print()">Print as PDF</button>
             </div>
-        </form>
-        <div class="actions" style="margin-top: 10px;">
-            <button type="button" onclick="window.print()">Print as PDF</button>
-            <a href="index.php">Back To Home</a>
-        </div>
-    </div>
+        </header>
 
-    <?php if ($error !== ''): ?>
-        <div class="msg no-print"><?= htmlspecialchars($error, ENT_QUOTES, 'UTF-8') ?></div>
-    <?php else: ?>
-        <div class="card">
-            <h2>Attendance Report</h2>
-            <p class="meta">
-                User: <strong><?= htmlspecialchars($currentUserName, ENT_QUOTES, 'UTF-8') ?></strong> |
-                Range: <strong><?= htmlspecialchars($startDate, ENT_QUOTES, 'UTF-8') ?></strong> to <strong><?= htmlspecialchars($endDate, ENT_QUOTES, 'UTF-8') ?></strong> |
-                Total: <strong><?= count($rows) ?></strong>
-            </p>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Log ID</th>
-                        <th>User</th>
-                        <th>Remarks</th>
-                        <th>DateTime</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php if (count($rows) === 0): ?>
-                        <tr><td colspan="4">No data found in selected date range.</td></tr>
-                    <?php else: ?>
-                        <?php foreach ($rows as $row): ?>
+        <?php if ($error !== ''): ?>
+            <div class="msg error no-print"><?= htmlspecialchars($error, ENT_QUOTES, 'UTF-8') ?></div>
+        <?php endif; ?>
+
+        <section class="panel no-print">
+            <form method="get" action="report.php" class="filters">
+                <div>
+                    <label for="start_date">Start Date</label>
+                    <input type="date" id="start_date" name="start_date" value="<?= htmlspecialchars($startDate, ENT_QUOTES, 'UTF-8') ?>" required>
+                </div>
+                <div>
+                    <label for="end_date">End Date</label>
+                    <input type="date" id="end_date" name="end_date" value="<?= htmlspecialchars($endDate, ENT_QUOTES, 'UTF-8') ?>" required>
+                </div>
+                <div class="actions">
+                    <button class="btn primary" type="submit">Search</button>
+                </div>
+            </form>
+        </section>
+
+        <?php if ($error === ''): ?>
+            <section class="panel">
+                <div class="kpi" style="margin-bottom: 12px;">
+                    <div class="kpi-item"><span class="meta">User</span><strong><?= htmlspecialchars($currentUserName, ENT_QUOTES, 'UTF-8') ?></strong></div>
+                    <div class="kpi-item"><span class="meta">Range</span><strong><?= htmlspecialchars($startDate, ENT_QUOTES, 'UTF-8') ?> to <?= htmlspecialchars($endDate, ENT_QUOTES, 'UTF-8') ?></strong></div>
+                    <div class="kpi-item"><span class="meta">Total Rows</span><strong><?= count($rows) ?></strong></div>
+                </div>
+
+                <div class="table-wrap">
+                    <table>
+                        <thead>
                             <tr>
-                                <td><?= (int)$row['id'] ?></td>
-                                <td><?= htmlspecialchars($row['user_name'], ENT_QUOTES, 'UTF-8') ?></td>
-                                <td><?= htmlspecialchars((string)($row['remarks'] ?? ''), ENT_QUOTES, 'UTF-8') ?></td>
-                                <td><?= htmlspecialchars($row['marked_at'], ENT_QUOTES, 'UTF-8') ?></td>
+                                <th>Log ID</th>
+                                <th>User</th>
+                                <th>Remarks</th>
+                                <th>DateTime</th>
                             </tr>
-                        <?php endforeach; ?>
-                    <?php endif; ?>
-                </tbody>
-            </table>
-        </div>
-    <?php endif; ?>
+                        </thead>
+                        <tbody>
+                            <?php if (count($rows) === 0): ?>
+                                <tr><td colspan="4">No data found in selected date range.</td></tr>
+                            <?php else: ?>
+                                <?php foreach ($rows as $row): ?>
+                                    <tr>
+                                        <td><?= (int)$row['id'] ?></td>
+                                        <td><?= htmlspecialchars($row['user_name'], ENT_QUOTES, 'UTF-8') ?></td>
+                                        <td><?= htmlspecialchars((string)($row['remarks'] ?? ''), ENT_QUOTES, 'UTF-8') ?></td>
+                                        <td><?= htmlspecialchars($row['marked_at'], ENT_QUOTES, 'UTF-8') ?></td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        <?php endif; ?>
+    </main>
 
     <script>
         if ('serviceWorker' in navigator) {

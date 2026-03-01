@@ -5,16 +5,66 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Offline</title>
   <style>
-    body { font-family: Arial, sans-serif; margin: 0; display: grid; place-items: center; min-height: 100vh; background: #f8fafc; color: #0f172a; }
-    .box { max-width: 540px; border: 1px solid #cbd5e1; border-radius: 10px; background: #fff; padding: 24px; text-align: center; }
-    a { color: #1d4ed8; }
+    :root {
+      --bg: #f4fbff;
+      --accent-1: #dbeafe;
+      --accent-2: #ccfbf1;
+      --text: #102a43;
+      --muted: #486581;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      font-family: 'Space Grotesk', 'Trebuchet MS', sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 12% 10%, var(--accent-2), transparent 35%),
+        radial-gradient(circle at 90% 10%, var(--accent-1), transparent 40%),
+        var(--bg);
+      padding: 14px;
+    }
+
+    .box {
+      width: min(560px, 100%);
+      border: 1px solid rgba(255, 255, 255, 0.85);
+      background: rgba(255, 255, 255, 0.86);
+      border-radius: 20px;
+      padding: 26px;
+      text-align: center;
+      box-shadow: 0 20px 50px rgba(16, 42, 67, 0.14);
+    }
+
+    h1 {
+      margin-top: 0;
+      margin-bottom: 10px;
+      font-size: clamp(1.6rem, 4vw, 2.1rem);
+    }
+
+    p { color: var(--muted); line-height: 1.5; }
+
+    a {
+      display: inline-block;
+      margin-top: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      color: #0f766e;
+      border: 1px solid #99f6e4;
+      background: #f0fdfa;
+      border-radius: 10px;
+      padding: 10px 14px;
+    }
   </style>
 </head>
 <body>
   <div class="box">
     <h1>You are offline</h1>
-    <p>Internet unavailable right now. Reconnect and try again to sync fresh attendance data.</p>
-    <p><a href="/index.php">Go back to home</a></p>
+    <p>Internet is unavailable right now. Reconnect to sync fresh attendance actions and reports.</p>
+    <a href="/index.php">Go back to home</a>
   </div>
 </body>
 </html>
