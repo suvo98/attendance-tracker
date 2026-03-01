@@ -111,6 +111,12 @@ if ($isLoggedIn) {
         <h2>Registered Users</h2>
         <a class="link-btn" href="users.php">Go To Users Route</a>
     </div>
+    <?php if ($isLoggedIn): ?>
+        <div class="card">
+            <h2>Reports</h2>
+            <a class="link-btn" href="report.php">Date Range Report</a>
+        </div>
+    <?php endif; ?>
 
     <?php if ($isLoggedIn): ?>
         <div class="card">
