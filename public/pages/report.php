@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-require_once __DIR__ . '/config.php';
+require_once __DIR__ . '/../../config/config.php';
 
 if (!isset($_SESSION['user_id'], $_SESSION['user_name'])) {
-    header('Location: index.php?status=auth_required');
+    header('Location: /?status=auth_required');
     exit;
 }
 
@@ -47,8 +47,8 @@ if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $startDate) || !preg_match('/^\d{4}-\d{
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#0ea5a4">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <link rel="manifest" href="/manifest.json">
-    <link rel="stylesheet" href="/styles.css">
+    <link rel="manifest" href="/assets/manifest.json">
+    <link rel="stylesheet" href="/assets/styles.css">
     <title>Date Range Report</title>
 </head>
 <body>
@@ -59,7 +59,7 @@ if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $startDate) || !preg_match('/^\d{4}-\d{
                 <p class="subtitle">Filter attendance logs and export PDF instantly.</p>
             </div>
             <div class="actions">
-                <a class="btn-link ghost" href="index.php">Back To Home</a>
+                <a class="btn-link ghost" href="/">Back To Home</a>
                 <button class="btn primary" type="button" onclick="window.print()">Print as PDF</button>
             </div>
         </header>
@@ -69,7 +69,7 @@ if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $startDate) || !preg_match('/^\d{4}-\d{
         <?php endif; ?>
 
         <section class="panel no-print">
-            <form method="get" action="report.php" class="filters">
+            <form method="get" action="/pages/report.php" class="filters">
                 <div>
                     <label for="start_date">Start Date</label>
                     <input type="date" id="start_date" name="start_date" value="<?= htmlspecialchars($startDate, ENT_QUOTES, 'UTF-8') ?>" required>
@@ -125,7 +125,7 @@ if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $startDate) || !preg_match('/^\d{4}-\d{
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', function () {
-                navigator.serviceWorker.register('/service-worker.js');
+                navigator.serviceWorker.register('/assets/service-worker.js');
             });
         }
     </script>

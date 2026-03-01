@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 date_default_timezone_set('Asia/Dhaka');
@@ -19,12 +20,13 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 $host = '127.0.0.1';
+$port = 3307;
 $dbName = 'attendance_tracker';
 $dbUser = 'root';
-$dbPass = '123456';
+$dbPass = '';
 $charset = 'utf8mb4';
 
-$dsn = "mysql:host={$host};dbname={$dbName};charset={$charset}";
+$dsn = "mysql:host={$host};port={$port};dbname={$dbName};charset={$charset}";
 $options = [
     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,

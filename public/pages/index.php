@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-require_once __DIR__ . '/config.php';
+require_once __DIR__ . '/../../config/config.php';
 
 $message = '';
 $messageClass = 'msg';
@@ -56,8 +56,8 @@ if ($isLoggedIn) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#0ea5a4">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <link rel="manifest" href="/manifest.json">
-    <link rel="stylesheet" href="/styles.css">
+    <link rel="manifest" href="/assets/manifest.json">
+    <link rel="stylesheet" href="/assets/styles.css">
     <title>Attendance Tracker</title>
 </head>
 <body>
@@ -70,7 +70,7 @@ if ($isLoggedIn) {
             <div class="actions no-print">
                 <span class="pill">Timezone: Asia/Dhaka (GMT+6)</span>
                 <?php if ($isLoggedIn): ?>
-                    <form method="post" action="mark.php">
+                    <form method="post" action="/actions/mark.php">
                         <input type="hidden" name="action" value="logout">
                         <button class="btn ghost" type="submit">Logout</button>
                     </form>
@@ -87,7 +87,7 @@ if ($isLoggedIn) {
                 <article class="panel">
                     <h2>Login With User Hash</h2>
                     <p class="meta">Login once. Session keeps you signed in for long-term use.</p>
-                    <form method="post" action="mark.php">
+                    <form method="post" action="/actions/mark.php">
                         <input type="hidden" name="action" value="login">
                         <label for="user_hash">User Hash</label>
                         <input type="text" id="user_hash" name="user_hash" required autocomplete="off" placeholder="Paste your unique hash">
@@ -100,7 +100,7 @@ if ($isLoggedIn) {
                 <article class="panel">
                     <h2>Mark Attendance</h2>
                     <p class="meta">Logged in as <strong><?= htmlspecialchars($currentUserName, ENT_QUOTES, 'UTF-8') ?></strong></p>
-                    <form method="post" action="mark.php">
+                    <form method="post" action="/actions/mark.php">
                         <input type="hidden" name="action" value="mark">
                         <label for="remarks">Remarks (optional)</label>
                         <textarea id="remarks" name="remarks" placeholder="Add optional note for this entry"></textarea>
@@ -115,9 +115,9 @@ if ($isLoggedIn) {
                 <h2>Quick Access</h2>
                 <p class="meta">Navigate to users and date-range reporting tools.</p>
                 <div class="actions" style="margin-top: 12px;">
-                    <a class="btn-link ghost" href="users.php">Registered Users</a>
+                    <a class="btn-link ghost" href="/pages/users.php">Registered Users</a>
                     <?php if ($isLoggedIn): ?>
-                        <a class="btn-link primary" href="report.php">Date Range Report</a>
+                        <a class="btn-link primary" href="/pages/report.php">Date Range Report</a>
                     <?php endif; ?>
                 </div>
             </article>
@@ -154,7 +154,7 @@ if ($isLoggedIn) {
                                         <td><?= htmlspecialchars((string)($row['remarks'] ?? ''), ENT_QUOTES, 'UTF-8') ?></td>
                                         <td><?= htmlspecialchars($row['marked_at'], ENT_QUOTES, 'UTF-8') ?></td>
                                         <td class="no-print">
-                                            <form method="post" action="mark.php" onsubmit="return confirm('Delete this log?');">
+                                            <form method="post" action="/actions/mark.php" onsubmit="return confirm('Delete this log?');">
                                                 <input type="hidden" name="action" value="delete">
                                                 <input type="hidden" name="log_id" value="<?= (int)$row['id'] ?>">
                                                 <button class="btn danger" type="submit">Delete</button>
@@ -178,7 +178,7 @@ if ($isLoggedIn) {
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', function () {
-                navigator.serviceWorker.register('/service-worker.js');
+                navigator.serviceWorker.register('/assets/service-worker.js');
             });
         }
     </script>

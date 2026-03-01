@@ -1,14 +1,15 @@
-﻿const CACHE_NAME = 'attendance-tracker-v4';
+const CACHE_NAME = 'attendance-tracker-v5';
 const APP_SHELL = [
   '/',
   '/index.php',
-  '/users.php',
-  '/report.php',
-  '/manifest.json',
-  '/styles.css',
-  '/offline.html',
-  '/icons/android-chrome-192x192.png',
-  '/icons/android-chrome-512x512.png'
+  '/pages/index.php',
+  '/pages/users.php',
+  '/pages/report.php',
+  '/assets/manifest.json',
+  '/assets/styles.css',
+  '/assets/offline.html',
+  '/assets/icons/android-chrome-192x192.png',
+  '/assets/icons/android-chrome-512x512.png'
 ];
 
 self.addEventListener('install', (event) => {
@@ -51,7 +52,7 @@ self.addEventListener('fetch', (event) => {
           if (cachedPage) {
             return cachedPage;
           }
-          return caches.match('/offline.html');
+          return caches.match('/assets/offline.html');
         })
     );
     return;
@@ -77,10 +78,7 @@ self.addEventListener('fetch', (event) => {
           caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
           return response;
         })
-        .catch(() => caches.match('/offline.html'));
+        .catch(() => caches.match('/assets/offline.html'));
     })
   );
 });
-
-
-

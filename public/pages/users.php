@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-require_once __DIR__ . '/config.php';
+require_once __DIR__ . '/../../config/config.php';
 
 $users = $pdo->query('SELECT id, name, user_hash FROM users ORDER BY id ASC')->fetchAll();
 ?>
@@ -12,8 +12,8 @@ $users = $pdo->query('SELECT id, name, user_hash FROM users ORDER BY id ASC')->f
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#0ea5a4">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <link rel="manifest" href="/manifest.json">
-    <link rel="stylesheet" href="/styles.css">
+    <link rel="manifest" href="/assets/manifest.json">
+    <link rel="stylesheet" href="/assets/styles.css">
     <title>Registered Users</title>
 </head>
 <body>
@@ -24,7 +24,7 @@ $users = $pdo->query('SELECT id, name, user_hash FROM users ORDER BY id ASC')->f
                 <p class="subtitle">Assigned names and unique hash keys.</p>
             </div>
             <div class="actions no-print">
-                <a class="btn-link ghost" href="index.php">Back To Home</a>
+                <a class="btn-link ghost" href="/">Back To Home</a>
             </div>
         </header>
 
@@ -61,7 +61,7 @@ $users = $pdo->query('SELECT id, name, user_hash FROM users ORDER BY id ASC')->f
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', function () {
-                navigator.serviceWorker.register('/service-worker.js');
+                navigator.serviceWorker.register('/assets/service-worker.js');
             });
         }
     </script>
