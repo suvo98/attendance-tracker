@@ -5,6 +5,7 @@ const APP_SHELL = [
   '/pages/index.php',
   '/pages/users.php',
   '/pages/report.php',
+  '/pages/heatmaps.php',
   '/assets/manifest.json',
   '/assets/styles.css',
   '/assets/offline.html',

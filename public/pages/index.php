@@ -113,9 +113,10 @@ if ($isLoggedIn) {
 
             <article class="panel">
                 <h2>Quick Access</h2>
-                <p class="meta">Navigate to users and date-range reporting tools.</p>
+                <p class="meta">Navigate to users, reports, and heatmap visualization tools.</p>
                 <div class="actions" style="margin-top: 12px;">
                     <a class="btn-link ghost" href="/pages/users.php">Registered Users</a>
+                    <a class="btn-link ghost" href="/pages/heatmaps.php">Heatmaps</a>
                     <?php if ($isLoggedIn): ?>
                         <a class="btn-link primary" href="/pages/report.php">Date Range Report</a>
                     <?php endif; ?>

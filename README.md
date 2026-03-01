@@ -50,4 +50,5 @@ Open: `http://127.0.0.1:8000`
   - `/` (home)
   - `/pages/users.php`
   - `/pages/report.php`
+  - `/pages/heatmaps.php`
   - `/actions/mark.php`
