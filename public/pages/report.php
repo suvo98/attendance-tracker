@@ -125,7 +125,7 @@ if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $startDate) || !preg_match('/^\d{4}-\d{
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', function () {
-                navigator.serviceWorker.register('/assets/service-worker.js');
+                navigator.serviceWorker.register('/service-worker.js');
             });
         }
     </script>

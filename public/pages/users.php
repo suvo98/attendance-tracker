@@ -61,7 +61,7 @@ $users = $pdo->query('SELECT id, name, user_hash FROM users ORDER BY id ASC')->f
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', function () {
-                navigator.serviceWorker.register('/assets/service-worker.js');
+                navigator.serviceWorker.register('/service-worker.js');
             });
         }
     </script>

@@ -35,6 +35,11 @@ if (isset($_GET['status'])) {
 $isLoggedIn = isset($_SESSION['user_id'], $_SESSION['user_name']);
 $currentUserId = $isLoggedIn ? (int)$_SESSION['user_id'] : 0;
 $currentUserName = $isLoggedIn ? (string)$_SESSION['user_name'] : '';
+$currentUserInitial = '';
+if ($isLoggedIn) {
+    $trimmedName = trim($currentUserName);
+    $currentUserInitial = $trimmedName !== '' ? strtoupper(substr($trimmedName, 0, 1)) : '?';
+}
 
 $myLogs = [];
 if ($isLoggedIn) {
@@ -70,6 +75,9 @@ if ($isLoggedIn) {
             <div class="actions no-print">
                 <span class="pill">Timezone: Asia/Dhaka (GMT+6)</span>
                 <?php if ($isLoggedIn): ?>
+                    <span class="user-avatar" title="<?= htmlspecialchars($currentUserName, ENT_QUOTES, 'UTF-8') ?>">
+                        <?= htmlspecialchars($currentUserInitial, ENT_QUOTES, 'UTF-8') ?>
+                    </span>
                     <form method="post" action="/actions/mark.php">
                         <input type="hidden" name="action" value="logout">
                         <button class="btn ghost" type="submit">Logout</button>
@@ -179,7 +187,7 @@ if ($isLoggedIn) {
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', function () {
-                navigator.serviceWorker.register('/assets/service-worker.js');
+                navigator.serviceWorker.register('/service-worker.js');
             });
         }
     </script>

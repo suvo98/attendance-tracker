@@ -14,10 +14,10 @@ attendance-tracker/
 |   |   `-- report.php               # Date range report page
 |   |-- actions/
 |   |   `-- mark.php                 # POST actions: login/logout/mark/delete
+|   |-- service-worker.js            # Offline cache logic (root scope)
 |   `-- assets/
 |       |-- styles.css               # App styles
 |       |-- manifest.json            # PWA manifest
-|       |-- service-worker.js        # Offline cache logic
 |       |-- offline.html             # Offline fallback page
 |       |-- app_icon.png             # App icon
 |       `-- icons/                   # PWA icon set

@@ -190,7 +190,7 @@ function heatCellStyle(int $value, int $max): string
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', function () {
-                navigator.serviceWorker.register('/assets/service-worker.js');
+                navigator.serviceWorker.register('/service-worker.js');
             });
         }
     </script>
