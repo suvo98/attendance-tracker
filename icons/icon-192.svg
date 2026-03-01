@@ -1,0 +1,11 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" viewBox="0 0 192 192">
+  <rect width="192" height="192" rx="28" fill="#0f172a" />
+  <rect x="28" y="28" width="136" height="136" rx="12" fill="#ffffff" />
+  <rect x="42" y="52" width="108" height="14" rx="4" fill="#0f172a" />
+  <rect x="42" y="78" width="108" height="10" rx="4" fill="#94a3b8" />
+  <rect x="42" y="96" width="108" height="10" rx="4" fill="#94a3b8" />
+  <rect x="42" y="114" width="108" height="10" rx="4" fill="#94a3b8" />
+  <circle cx="62" cy="156" r="10" fill="#16a34a" />
+  <path d="M57 156l4 4 8-10" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="95" y="160" text-anchor="middle" font-size="16" font-family="Arial" fill="#0f172a">AT</text>
+</svg>
