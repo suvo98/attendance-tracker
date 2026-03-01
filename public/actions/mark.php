@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-require_once __DIR__ . '/config.php';
+require_once __DIR__ . '/../../config/config.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header('Location: index.php');
+    header('Location: /');
     exit;
 }
 
@@ -14,7 +14,7 @@ try {
     if ($action === 'login') {
         $userHash = trim((string)($_POST['user_hash'] ?? ''));
         if ($userHash === '') {
-            header('Location: index.php?status=invalid_hash');
+            header('Location: /?status=invalid_hash');
             exit;
         }
 
@@ -23,7 +23,7 @@ try {
         $user = $findUser->fetch();
 
         if (!$user) {
-            header('Location: index.php?status=invalid_hash');
+            header('Location: /?status=invalid_hash');
             exit;
         }
 
@@ -31,7 +31,7 @@ try {
         $_SESSION['user_id'] = (int)$user['id'];
         $_SESSION['user_name'] = (string)$user['name'];
 
-        header('Location: index.php?status=login_ok');
+        header('Location: /?status=login_ok');
         exit;
     }
 
@@ -42,12 +42,12 @@ try {
             setcookie(session_name(), '', time() - 42000, $params['path'], $params['domain'], $params['secure'], $params['httponly']);
         }
         session_destroy();
-        header('Location: index.php?status=logged_out');
+        header('Location: /?status=logged_out');
         exit;
     }
 
     if (!isset($_SESSION['user_id'], $_SESSION['user_name'])) {
-        header('Location: index.php?status=auth_required');
+        header('Location: /?status=auth_required');
         exit;
     }
 
@@ -70,14 +70,14 @@ try {
             ':marked_at' => $markedAt,
         ]);
 
-        header('Location: index.php?status=ok');
+        header('Location: /?status=ok');
         exit;
     }
 
     if ($action === 'delete') {
         $logId = (int)($_POST['log_id'] ?? 0);
         if ($logId <= 0) {
-            header('Location: index.php?status=invalid_delete');
+            header('Location: /?status=invalid_delete');
             exit;
         }
 
@@ -88,17 +88,17 @@ try {
         ]);
 
         if ($deleteStmt->rowCount() === 0) {
-            header('Location: index.php?status=delete_denied');
+            header('Location: /?status=delete_denied');
             exit;
         }
 
-        header('Location: index.php?status=deleted');
+        header('Location: /?status=deleted');
         exit;
     }
 
-    header('Location: index.php?status=error');
+    header('Location: /?status=error');
     exit;
 } catch (Throwable $e) {
-    header('Location: index.php?status=error');
+    header('Location: /?status=error');
     exit;
 }
